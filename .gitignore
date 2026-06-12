@@ -1,0 +1,8 @@
+outputs/tworoom_encoder_readout/*.pt
+outputs/tworoom_encoder_readout/*.npy
+outputs/tworoom_encoder_readout/latents/
+checkpoints/
+data/
+datasets/
+wandb/
+
