@@ -44,7 +44,7 @@ def load_tworoom_dataset(cfg):
     with open_dict(cfg):
         cfg.model.action_encoder.input_dim = cfg.data.dataset.frameskip * dataset.get_dim("action")
     dataset.transform = spt.data.transforms.Compose(
-        [get_img_preprocessor(source="pixels", target="pixels", img_size=cfg.img_size)]
+        get_img_preprocessor(source="pixels", target="pixels", img_size=cfg.img_size)
     )
     return dataset
 
