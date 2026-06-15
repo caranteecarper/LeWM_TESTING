@@ -233,5 +233,102 @@ about 41-45 hours including validation/checkpoint overhead
 
 ## Completion / Checkpoint Validation
 
-Pending. This section should be updated after full training finishes.
+Completed.
 
+Completion time observed in log:
+
+```text
+2026-06-14 18:11:37 +08:00
+```
+
+Final checkpoint:
+
+```text
+/data/lzt26/stable-wm/checkpoints/tworoom_official_baseline_full/weights_epoch_100.pt
+```
+
+Training completed all configured epochs:
+
+```text
+Trainer.fit stopped: max_epochs=100 reached.
+epoch=99-step=513800.ckpt saved
+weights_epoch_100.pt saved
+```
+
+Final training metrics:
+
+```text
+fit/loss: 0.10382168740034103
+fit/pred_loss: 0.005188876762986183
+fit/sigreg_loss: 1.09375
+```
+
+Final validation metrics:
+
+```text
+validate/loss: 0.11483990401029587
+validate/pred_loss: 0.00155008549336344
+validate/sigreg_loss: 1.2586156129837036
+```
+
+Checkpoint load / forward validation was performed through the official clean analysis script:
+
+```text
+scripts/analysis/tworoom_check_encoder_determinism.py
+```
+
+Validation result:
+
+```text
+missing keys: []
+unexpected keys: []
+latent shape: (16, 4, 192)
+max absolute difference across repeated eval forwards: 0.0
+mean absolute difference across repeated eval forwards: 0.0
+```
+
+This confirms the official checkpoint loads successfully and can encode real TwoRoom pixels with latent dimension 192.
+
+## Encoder Readout Artifacts
+
+Determinism report:
+
+```text
+reports/tworoom_encoder_readout/06_encoder_determinism.md
+```
+
+Latent cache:
+
+```text
+outputs/tworoom_encoder_readout/tworoom_latents.pt
+```
+
+Latent cache contents:
+
+```text
+z: (730809, 192)
+position: (730809, 2)
+action: (730809, 10)
+episode_id: (730809,)
+timestep: (730809,)
+```
+
+Position probe report:
+
+```text
+reports/tworoom_encoder_readout/07_position_probe_result.md
+```
+
+Position probe weights:
+
+```text
+outputs/tworoom_encoder_readout/linear_probe_position.pt
+```
+
+Figures:
+
+```text
+outputs/tworoom_encoder_readout/figures/
+```
+
+The latent cache, probe weights, and figures are intentionally not committed to Git.
