@@ -34,11 +34,21 @@ def metrics(pred, y):
     }
 
 
-def split_by_episode_or_order(n):
-    idx = torch.arange(n)
-    n_train = int(0.8 * n)
-    n_val = int(0.1 * n)
-    return idx[:n_train], idx[n_train : n_train + n_val], idx[n_train + n_val :]
+def split_by_episode(episode_id, seed=3072):
+    unique = torch.unique(episode_id.long())
+    generator = torch.Generator().manual_seed(seed)
+    unique = unique[torch.randperm(unique.numel(), generator=generator)]
+    n_train = int(0.8 * unique.numel())
+    n_val = int(0.1 * unique.numel())
+    train_eps = unique[:n_train]
+    val_eps = unique[n_train : n_train + n_val]
+    test_eps = unique[n_train + n_val :]
+
+    def indices_for(eps):
+        mask = torch.isin(episode_id.long(), eps)
+        return torch.nonzero(mask, as_tuple=False).squeeze(1)
+
+    return indices_for(train_eps), indices_for(val_eps), indices_for(test_eps), train_eps, val_eps, test_eps
 
 
 def save_scatter(path, x, y, xlabel, ylabel, title):
@@ -81,7 +91,10 @@ def main():
     data = torch.load(args.latents, map_location="cpu")
     z = data["z"].float()
     y = data["position"].float()
-    train_idx, val_idx, test_idx = split_by_episode_or_order(z.size(0))
+    episode_id = data.get("episode_id")
+    if episode_id is None:
+        raise ValueError("latent cache must include episode_id for episode-level split")
+    train_idx, val_idx, test_idx, train_eps, val_eps, test_eps = split_by_episode(episode_id)
     mean = z[train_idx].mean(dim=0, keepdim=True)
     std = z[train_idx].std(dim=0, keepdim=True).clamp_min(1e-6)
     z_std = (z - mean) / std
@@ -123,6 +136,16 @@ def main():
         "wx_wy_cosine": wx_wy_cosine,
         "val_metrics": val_metrics,
         "test_metrics": test_metrics,
+        "split": {
+            "policy": "deterministic random split by unique episode_id",
+            "seed": 3072,
+            "train_episodes": int(train_eps.numel()),
+            "val_episodes": int(val_eps.numel()),
+            "test_episodes": int(test_eps.numel()),
+            "train_samples": int(train_idx.numel()),
+            "val_samples": int(val_idx.numel()),
+            "test_samples": int(test_idx.numel()),
+        },
         "metadata": data.get("metadata", {}),
     }
     output = Path(args.output)
@@ -140,7 +163,11 @@ def main():
 Latent shape: `{tuple(z.shape)}`
 Position shape: `{tuple(y.shape)}`
 
-Split policy: sequential 80/10/10 over sequence-start samples. The latent cache stores one frame per sequence start to avoid overlapping-frame duplication.
+Split policy: deterministic random split by unique `episode_id`, seed `3072`.
+
+- train episodes: `{train_eps.numel()}`, samples: `{train_idx.numel()}`
+- val episodes: `{val_eps.numel()}`, samples: `{val_idx.numel()}`
+- test episodes: `{test_eps.numel()}`, samples: `{test_idx.numel()}`
 
 ## Validation Metrics
 
@@ -190,4 +217,3 @@ Figures saved under:
 
 if __name__ == "__main__":
     main()
-
