@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 from pathlib import Path
 
 import hydra
@@ -8,10 +9,12 @@ import stable_worldmodel as swm
 import torch
 from omegaconf import OmegaConf, open_dict
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 from utils import get_img_preprocessor
 
-
-REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CHECKPOINT = Path("/data/lzt26/stable-wm/checkpoints/tworoom_official_baseline_full/weights_epoch_100.pt")
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "outputs" / "tworoom_encoder_readout"
 DEFAULT_REPORT_DIR = REPO_ROOT / "reports" / "tworoom_encoder_readout"
@@ -86,4 +89,3 @@ def write_json(path, data):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False))
-
