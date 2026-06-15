@@ -38,6 +38,9 @@ def compose_tworoom_cfg(batch_size=128, num_workers=0):
 
 def load_tworoom_dataset(cfg):
     dataset_cfg = OmegaConf.to_container(cfg.data.dataset, resolve=True)
+    for key in ("pos_agent", "ep_idx", "step_idx"):
+        if key not in dataset_cfg["keys_to_load"]:
+            dataset_cfg["keys_to_load"].append(key)
     dataset_name = dataset_cfg.pop("name")
     cache_dir = os.environ.get("LOCAL_DATASET_DIR", "/data/lzt26/stable-wm")
     dataset = swm.data.load_dataset(dataset_name, transform=None, cache_dir=cache_dir, **dataset_cfg)

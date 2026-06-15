@@ -35,7 +35,8 @@ def main():
 
     with torch.no_grad():
         for batch in loader:
-            raw_position = batch["proprio"][:, 0].detach().cpu().float()
+            position_key = "pos_agent" if "pos_agent" in batch else "proprio"
+            raw_position = batch[position_key][:, 0].detach().cpu().float()
             raw_action = batch["action"][:, 0].detach().cpu().float()
             batch_gpu = batch_to_device(batch, device)
             emb = model.encode(dict(batch_gpu))["emb"][:, 0].detach().cpu().float()
@@ -43,8 +44,14 @@ def main():
             zs.append(emb)
             positions.append(raw_position)
             actions.append(raw_action)
-            episode_ids.append(torch.arange(seen, seen + bsz, dtype=torch.long) // 1000000)
-            timesteps.append(torch.arange(seen, seen + bsz, dtype=torch.long))
+            if "ep_idx" in batch:
+                episode_ids.append(batch["ep_idx"][:, 0].detach().cpu().long())
+            else:
+                episode_ids.append(torch.arange(seen, seen + bsz, dtype=torch.long) // 1000000)
+            if "step_idx" in batch:
+                timesteps.append(batch["step_idx"][:, 0].detach().cpu().long())
+            else:
+                timesteps.append(torch.arange(seen, seen + bsz, dtype=torch.long))
             seen += bsz
             if args.max_samples and seen >= args.max_samples:
                 break
@@ -74,7 +81,7 @@ def main():
             {
                 "missing_keys": missing,
                 "unexpected_keys": unexpected,
-                "position_source": "proprio[:, 0], confirmed identical to pos_agent in TwoRoom raw file for sampled rows",
+                "position_source": "pos_agent[:, 0] from TwoRoom HDF5 sequence reader, falling back to proprio only if pos_agent is unavailable",
                 "action_source": "raw frameskip-packed action[:, 0]",
                 "sequence_policy": "one latent per dataset sequence start to avoid duplicated overlapping frames",
             },
@@ -90,4 +97,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
