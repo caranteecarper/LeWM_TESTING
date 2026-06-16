@@ -227,6 +227,8 @@ def save_scatter(path, x, y, xlabel, ylabel, title, max_points=30000):
 
 
 def save_bar(path, values, title, topk=32):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
     values = values.detach().cpu().float()
     vals, idx = torch.topk(values.abs(), k=min(topk, values.numel()))
     plt.figure(figsize=(9, 4))
