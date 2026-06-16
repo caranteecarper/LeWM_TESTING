@@ -2,7 +2,13 @@ outputs/tworoom_encoder_readout/*.pt
 outputs/tworoom_encoder_readout/*.npy
 outputs/tworoom_encoder_readout/latents/
 outputs/tworoom_encoder_readout/figures/
+outputs/tworoom_preintegration/*.pt
+outputs/tworoom_preintegration/**/*.pt
+outputs/tworoom_preintegration/*.npy
+outputs/tworoom_preintegration/figures*/
+outputs/tworoom_preintegration/**/*.png
 checkpoints/
 data/
 datasets/
 wandb/
+*.log
