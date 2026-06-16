@@ -7,6 +7,8 @@ outputs/tworoom_preintegration/**/*.pt
 outputs/tworoom_preintegration/*.npy
 outputs/tworoom_preintegration/figures*/
 outputs/tworoom_preintegration/**/*.png
+outputs/tworoom_preintegration_v2/
+scripts/analysis/__pycache__/
 checkpoints/
 data/
 datasets/
