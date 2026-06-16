@@ -1,0 +1,17 @@
+# Delta Readout
+
+Input pairs: `/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_preintegration/tworoom_pairs.pt`
+
+|model|x_mse|y_mse|x_rmse|y_rmse|x_r2|y_r2|x_pearson|y_pearson|overall_mse|
+|---|---|---|---|---|---|---|---|---|---|
+|static_W_delta_projection|10.023714065551758|149.8037872314453|3.166024923324585|12.239436149597168|0.4443133473396301|-7.041701316833496|0.8002591133117676|0.3077795207500458|79.91374969482422|
+|linear_delta_z|1.8970062732696533|7.124406337738037|1.3773185014724731|2.669158458709717|0.8948352932929993|0.6175507307052612|0.9459576606750488|0.7858632802963257|4.510706424713135|
+|mlp_delta_z|1.502173900604248|1.2579960823059082|1.2256320714950562|1.1216042041778564|0.9167236685752869|0.932468831539154|0.9575675129890442|0.9669322967529297|1.3800849914550781|
+|kanfis_style_delta_top32|16.491212844848633|18.38098907470703|4.060937404632568|4.28730583190918|0.08577334880828857|0.013279855251312256|0.349660724401474|0.16373707354068756|17.43610191345215|
+
+## Answers
+
+- Static W delta projection is listed as a baseline when available.
+- Retrained delta_z probes should be compared against static W projection in the table.
+- If delta R2 is positive and Pearson high, latent changes contain physical motion information.
+- If delta_y remains weak, h+action transition should be treated cautiously.
