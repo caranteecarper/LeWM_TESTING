@@ -6,8 +6,8 @@ from tworoom_v2_common import *
 
 
 def extract_metric(text, label):
-    m = re.search(rf"{re.escape(label)}:\s*`([^`]+)`", text)
-    return float(m.group(1)) if m else None
+    matches = re.findall(rf"{re.escape(label)}:\s*`([^`]+)`", text)
+    return float(matches[-1]) if matches else None
 
 
 def main():

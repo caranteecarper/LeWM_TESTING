@@ -13,7 +13,11 @@ def run_toy(name, x, y):
     model = KANFISStyleTSKRegressor(x.shape[1], y.shape[1], rules=12)
     model, _, hist = train_model(model, x_std, y_std, train_idx, val_idx, epochs=80, batch_size=256, lr=2e-3, max_train=None)
     pred = inverse_standardize(batched_predict(model, x_std[test_idx]), y_mean, y_scale)
-    met = metric_dict(pred, y[test_idx])
+    target = y[test_idx]
+    mse = ((pred - target) ** 2).mean().item()
+    ss_res = ((pred - target) ** 2).sum()
+    ss_tot = ((target - target.mean(0)) ** 2).sum().clamp_min(1e-12)
+    met = {"overall_mse": mse, "r2": (1 - ss_res / ss_tot).item(), "pearson": pearson(pred.reshape(-1), target.reshape(-1))}
     return {"task": name, **met, **model.stats(), "first_loss": hist[0]["train_loss"], "last_loss": hist[-1]["train_loss"], "grad_norm": hist[-1]["grad_norm"]}, hist
 
 
@@ -113,7 +117,7 @@ def main():
             states[f"{task_name}_{model_name}"] = state
     torch.save(states, out / "lowdim_sanity_models.pt")
 
-    fields = ["task", "x_mse", "y_mse", "x_r2", "y_r2", "x_pearson", "y_pearson", "overall_mse", "sigma_min", "sigma_mean", "sigma_max", "first_loss", "last_loss"]
+    fields = ["task", "overall_mse", "r2", "pearson", "sigma_min", "sigma_mean", "sigma_max", "first_loss", "last_loss", "grad_norm"]
     low_fields = ["name", "model", "x_mse", "y_mse", "x_r2", "y_r2", "x_pearson", "y_pearson", "overall_mse"]
     text = f"""# KANFIS-Style Debug
 
