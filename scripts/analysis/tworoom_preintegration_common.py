@@ -171,6 +171,7 @@ def train_model(model, x, y, train_idx, val_idx, *, epochs=8, batch_size=4096, l
         with torch.no_grad():
             pred = batched_predict(model, x[val_idx], device=device)
             val = F.mse_loss(pred.cpu(), y[val_idx].float()).item()
+        model.to(device)
         if val < best_val:
             best_val = val
             best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
@@ -244,4 +245,3 @@ def table_md(rows, fields):
     for r in rows:
         lines.append("|" + "|".join(str(r.get(f, "")) for f in fields) + "|")
     return "\n".join(lines)
-
