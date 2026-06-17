@@ -62,7 +62,8 @@ def load_images_64(data, idx, image_size=64):
             chunks.append((small.clamp(0, 1) * 255).byte())
         imgs_sorted = torch.cat(chunks, 0)
         imgs = imgs_sorted[torch.from_numpy(restored).long()]
-        pos_h5 = torch.from_numpy(f["pos_agent"][h5_idx]).float()
+        pos_sorted = torch.from_numpy(f["pos_agent"][sorted_idx]).float()
+        pos_h5 = pos_sorted[torch.from_numpy(restored).long()]
     align_error = (pos_h5 - data["position_t"][idx]).abs().max().item()
     return imgs, h5_idx, align_error
 
