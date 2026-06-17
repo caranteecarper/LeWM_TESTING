@@ -53,8 +53,10 @@ def load_images_64(data, idx, image_size=64):
         restored = np.empty_like(order)
         restored[order] = np.arange(len(order))
         chunks = []
-        for start in range(0, len(sorted_idx), 2048):
-            raw = f["pixels"][sorted_idx[start : start + 2048]]
+        for start in range(0, len(sorted_idx), 512):
+            if start % 4096 == 0:
+                print(f"reading pixels {start}/{len(sorted_idx)}", flush=True)
+            raw = f["pixels"][sorted_idx[start : start + 512]]
             x = torch.from_numpy(raw).permute(0, 3, 1, 2).float() / 255.0
             small = F.interpolate(x, size=(image_size, image_size), mode="bilinear", align_corners=False)
             chunks.append((small.clamp(0, 1) * 255).byte())
@@ -68,7 +70,7 @@ def load_images_64(data, idx, image_size=64):
 def main():
     ensure_dirs()
     data = load_base_data()
-    idx, split_names, local_split = choose_subset(data, {"train": 30000, "val": 5000, "test": 8000})
+    idx, split_names, local_split = choose_subset(data, {"train": 8000, "val": 1500, "test": 2500})
     images, h5_idx, align_error = load_images_64(data, idx)
     v4_key, q4 = compute_v4_q_for_indices(data, idx)
     v41_key, q41 = compute_v41_q_for_indices(data, idx)
