@@ -40,6 +40,7 @@ def choose_subset(data, per_split):
 
 
 def load_images_64(data, idx, image_size=64):
+    import hdf5plugin  # noqa: F401 - registers compressed HDF5 pixel filters.
     import h5py
 
     with h5py.File(H5_PATH, "r") as f:
@@ -139,4 +140,3 @@ Visual dataset saved to `{VISUAL_DATASET}`.
 
 if __name__ == "__main__":
     main()
-

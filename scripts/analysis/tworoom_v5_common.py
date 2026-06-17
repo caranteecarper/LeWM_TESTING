@@ -4,6 +4,7 @@ import subprocess
 from pathlib import Path
 
 import matplotlib
+import numpy as np
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -161,12 +162,12 @@ def spatial_heatmap(path, pos, values, title, bins=48):
     x = pos[:, 0].numpy()
     y = pos[:, 1].numpy()
     v = values.numpy()
-    sum_grid, xe, ye = torch.histogramdd(torch.tensor(list(zip(x, y))), bins=bins, weight=torch.tensor(v))
-    cnt_grid, _, _ = torch.histogramdd(torch.tensor(list(zip(x, y))), bins=[torch.tensor(xe), torch.tensor(ye)])
-    grid = (sum_grid / cnt_grid.clamp_min(1)).T
-    grid[cnt_grid.T == 0] = float("nan")
+    sum_grid, xe, ye = np.histogram2d(x, y, bins=bins, weights=v)
+    cnt_grid, _, _ = np.histogram2d(x, y, bins=[xe, ye])
+    grid = (sum_grid / np.maximum(cnt_grid, 1)).T
+    grid[cnt_grid.T == 0] = np.nan
     plt.figure(figsize=(5, 4))
-    plt.imshow(grid.numpy(), origin="lower", aspect="auto", extent=[xe[0], xe[-1], ye[0], ye[-1]], cmap="viridis")
+    plt.imshow(grid, origin="lower", aspect="auto", extent=[xe[0], xe[-1], ye[0], ye[-1]], cmap="viridis")
     plt.colorbar(label="mean value")
     plt.title(title)
     plt.xlabel("x")
@@ -222,4 +223,3 @@ def quiver_residual(path, pos, residual, title="residual direction", bins=16):
     plt.tight_layout()
     plt.savefig(path, dpi=160)
     plt.close()
-
