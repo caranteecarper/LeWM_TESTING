@@ -1,0 +1,29 @@
+# H Dynamics Consistency
+
+Extractor: `pure_mlp_K16`, with `h_t = F(z_t)` and `h_next = F(z_next)`.
+
+## Physical Delta / Residual Tasks
+
+|name|model|x_mse|y_mse|x_r2|y_r2|x_pearson|y_pearson|overall_mse|
+|---|---|---|---|---|---|---|---|---|
+|delta_h_to_delta_position|linear|7.955322742462158|10.132416725158691|0.5589791536331177|0.45607608556747437|0.747649610042572|0.6754032969474792|9.043869018554688|
+|h_action_to_delta_position|linear|1.6154590845108032|0.08013960719108582|0.9104434847831726|0.9956979751586914|0.954176664352417|0.9978324174880981|0.8477993011474609|
+|h_action_to_residual|linear|1.6154512166976929|0.08015146851539612|0.011985063552856445|0.023674190044403076|0.1097589060664177|0.15512481331825256|0.8478013277053833|
+|delta_h_to_delta_position|mlp|10.575685501098633|12.207693099975586|0.41371363401412964|0.34467196464538574|0.6432590484619141|0.5871203541755676|11.39168930053711|
+|h_action_to_delta_position|mlp|1.5886093378067017|0.38772088289260864|0.9119319319725037|0.9791865348815918|0.9549645781517029|0.989529550075531|0.9881650805473328|
+|h_action_to_residual|mlp|1.1224124431610107|0.07073458284139633|0.3135290741920471|0.13838136196136475|0.5618000030517578|0.37242433428764343|0.596573531627655|
+
+## H-Space Dynamics Tasks
+
+|task|model|mse|mean_r2|dim_r2_min|
+|---|---|---|---|---|
+|h_action_to_h_next|linear|0.07907789945602417|0.597639799118042|0.33023929595947266|
+|h_action_to_delta_h|linear|0.07907789945602417|0.2820846438407898|0.23376202583312988|
+|h_action_to_h_next|mlp|0.0643145963549614|0.6740916967391968|0.47720909118652344|
+|h_action_to_delta_h|mlp|0.061158813536167145|0.4430758059024811|0.40547794103622437|
+
+## Answers
+
+- `delta_h -> delta_position` tests whether changes in h correspond to real motion.
+- `[h, action] -> h_next/delta_h` tests whether h carries a temporally usable state, not just a static coordinate readout.
+- If h-space prediction is stable and physical delta/residual is competitive, formal integration should prefer h-next or delta-h objectives before direct delta-position replacement.
