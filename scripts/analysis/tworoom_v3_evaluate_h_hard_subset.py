@@ -14,7 +14,16 @@ def get_h_for_key(data, key):
     model.load_state_dict(st["state_dict"])
     zt = (data["z_t"] - st["norm"]["z_mean"]) / st["norm"]["z_std"].clamp_min(1e-6)
     zn = (data["z_next"] - st["norm"]["z_mean"]) / st["norm"]["z_std"].clamp_min(1e-6)
-    return batched_predict(model, zt, return_h=True)[1].float(), batched_predict(model, zn, return_h=True)[1].float()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device).eval()
+    hs = []
+    hns = []
+    with torch.no_grad():
+        for i in range(0, zt.shape[0], 16384):
+            hs.append(model.encode(zt[i : i + 16384].to(device)).cpu())
+            hns.append(model.encode(zn[i : i + 16384].to(device)).cpu())
+    model.cpu()
+    return torch.cat(hs, 0).float(), torch.cat(hns, 0).float()
 
 
 def fit_linear_pred_all(x, y, tr):

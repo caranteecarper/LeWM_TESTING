@@ -1,0 +1,7 @@
+﻿threshold,value
+action_error_top20,0.3499937951564789
+action_error_top10,0.3695480525493622
+high_residual_top20,0.3499937951564789
+high_residual_top10,0.3695480525493622
+action_mag_p75,2.8932225704193115
+disp_mag_p25,5.104437351226807
