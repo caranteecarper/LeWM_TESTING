@@ -9,6 +9,7 @@ outputs/tworoom_preintegration/figures*/
 outputs/tworoom_preintegration/**/*.png
 outputs/tworoom_preintegration_v2/
 outputs/tworoom_preintegration_v3/
+outputs/tworoom_kanfis_rule_features/
 scripts/analysis/__pycache__/
 checkpoints/
 data/
