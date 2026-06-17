@@ -131,8 +131,12 @@ def save_image_grid(path, rows, col_titles, row_titles=None, figsize_scale=2.0):
     nrow = len(rows)
     ncol = len(rows[0])
     fig, axes = plt.subplots(nrow, ncol, figsize=(figsize_scale * ncol, figsize_scale * nrow))
-    if nrow == 1:
-        axes = [axes]
+    if nrow == 1 and ncol == 1:
+        axes = np.array([[axes]])
+    elif nrow == 1:
+        axes = np.array([axes])
+    elif ncol == 1:
+        axes = np.array([[ax] for ax in axes])
     for r in range(nrow):
         for c in range(ncol):
             ax = axes[r][c]

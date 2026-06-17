@@ -48,6 +48,7 @@ def train_decoder(name, x, y, tr, va, te):
         with torch.no_grad():
             val_pred = batched_predict(model, xs[va], batch_size=1024)
             val = F.mse_loss(val_pred, y[va]).item()
+        model.to(device)
         hist.append({"epoch": epoch, "train_mse": total / max(count, 1), "val_mse": val})
         if val < best_val:
             best_val = val
@@ -138,4 +139,3 @@ Post-hoc decoders are trained with fixed representations. Action is not used for
 
 if __name__ == "__main__":
     main()
-
