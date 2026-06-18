@@ -111,8 +111,17 @@ def compute_v41_q(data):
     return key, q_from_model(model, obj, data, hard_topk=True)
 
 
+def v42_model_path(key):
+    path = V42_MODEL_DIR / f"{key}.pt"
+    if path.exists():
+        return path
+    legacy_path = V42_MODEL_DIR / f"{key}.pt.pt"
+    if legacy_path.exists():
+        return legacy_path
+    return path
+
+
 def compute_v42_q(data):
     key = torch.load(V42_MODEL_DIR / "summary.pt", map_location="cpu")["best_key"]
-    model, obj = load_sharp_model(V42_MODEL_DIR / f"{key}.pt")
+    model, obj = load_sharp_model(v42_model_path(key))
     return key, q_from_model(model, obj, data, hard_topk=bool(obj["meta"].get("top_k")))
-

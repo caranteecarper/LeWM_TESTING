@@ -8,7 +8,7 @@ def main():
         base = load_base_data()
         vis["action"] = base["action"][vis["indices"].long()].float()
     key = torch.load(V42_MODEL_DIR / "summary.pt", map_location="cpu")["best_key"]
-    model, obj = load_sharp_model(V42_MODEL_DIR / f"{key}.pt")
+    model, obj = load_sharp_model(v42_model_path(key))
     q = q_from_model(model, obj, vis, hard_topk=bool(obj["meta"].get("top_k")))
     vis = dict(vis)
     vis["q_v42_t"] = q

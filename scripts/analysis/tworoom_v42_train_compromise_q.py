@@ -50,7 +50,7 @@ def train_one(name, cfg, data):
         row[f"{subset}_res_mse"] = sr["res_overall_mse"]
     row.update({"variant": name, "num_rules": cfg["rules"], "top_k": cfg["top_k"], "tau_end": cfg["tau"], "hard_weight": cfg["hard"]})
     meta = {"variant": name, "num_rules": cfg["rules"], "top_k": cfg["top_k"], "tau_end": cfg["tau"], "hard_weight": cfg["hard"], "h_dim": std_data["h_t"].shape[1], "action_dim": std_data["action"].shape[1], "hard_dim": hard.shape[1], "history": hist, "metrics": row, "no_q_to_h": True}
-    save_sharp_model(V42_MODEL_DIR / f"{name}.pt", model, norm, meta)
+    save_sharp_model(V42_MODEL_DIR / name, model, norm, meta)
     return row
 
 
@@ -83,4 +83,3 @@ No q->h reconstruction, h mimicry, hidden distillation, image reconstruction, or
 
 if __name__ == "__main__":
     main()
-
