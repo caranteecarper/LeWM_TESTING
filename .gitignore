@@ -13,6 +13,8 @@ outputs/tworoom_kanfis_rule_features/
 outputs/tworoom_kanfis_rule_features_v41/
 outputs/tworoom_visualization_v5/
 outputs/tworoom_visualization_v51/
+outputs/tworoom_rule_group_v52/
+outputs/tworoom_kanfis_v42_compromise/
 scripts/analysis/__pycache__/
 checkpoints/
 data/
