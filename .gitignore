@@ -12,6 +12,7 @@ outputs/tworoom_preintegration_v3/
 outputs/tworoom_kanfis_rule_features/
 outputs/tworoom_kanfis_rule_features_v41/
 outputs/tworoom_visualization_v5/
+outputs/tworoom_visualization_v51/
 scripts/analysis/__pycache__/
 checkpoints/
 data/
