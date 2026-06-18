@@ -4,6 +4,9 @@ from tworoom_v42_common import *
 def main():
     ensure_dirs()
     vis = load_visual()
+    if "action" not in vis:
+        base = load_base_data()
+        vis["action"] = base["action"][vis["indices"].long()].float()
     key = torch.load(V42_MODEL_DIR / "summary.pt", map_location="cpu")["best_key"]
     model, obj = load_sharp_model(V42_MODEL_DIR / f"{key}.pt")
     q = q_from_model(model, obj, vis, hard_topk=bool(obj["meta"].get("top_k")))
@@ -48,4 +51,3 @@ Figures saved under `{fig_dir}`.
 
 if __name__ == "__main__":
     main()
-

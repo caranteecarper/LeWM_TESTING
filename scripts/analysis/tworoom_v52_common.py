@@ -8,8 +8,9 @@ import torch.nn.functional as F
 from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 
-from tworoom_v5_common import REPO_ROOT, VISUAL_DATASET, load_visual, table_md, metric_dict, pearson
+from tworoom_v5_common import REPO_ROOT, VISUAL_DATASET, table_md, metric_dict, pearson
 from tworoom_v51_common import hard_enrichment, compactness
+from tworoom_v4_common import BEST_H_DATASET
 
 
 V52_OUT = REPO_ROOT / "outputs" / "tworoom_rule_group_v52"
@@ -23,6 +24,15 @@ GROUPS = {
     "group_3": [13, 15, 8, 1],
     "group_4": [0, 9, 3, 7],
 }
+
+
+def load_visual():
+    vis = torch.load(VISUAL_DATASET, map_location="cpu")
+    if "action" not in vis:
+        base = torch.load(BEST_H_DATASET, map_location="cpu")
+        idx = vis["indices"].long()
+        vis["action"] = base["action"][idx].float()
+    return vis
 
 
 def ensure_dirs():
@@ -195,4 +205,3 @@ def eval_input(vis, x, name, subset_names=None):
         row.update(binary_metrics(ph, y_hard[idx]))
         rows.append(row)
     return rows, {"res": (wr, br), "delta": (wd, bd), "hard": (wh, bh)}
-
