@@ -29,9 +29,15 @@ def main():
             sections.append(path.read_text())
     text = f"""# TwoRoom V4.2 Full Validation
 
+## Run Provenance Note
+
+The server checkout may report stale commit `4f42a43` because server-side GitHub pull is unreliable. The `tworoom_v42_full_*` scripts used for this run were synchronized from the local experiment branch by `scp`; this commit contains those scripts. No LeWM encoder, predictor, train loop, loss, module, environment, h model, or V4/V4.1/V4.2 q model was retrained or modified.
+
 ## Final Judgment
 
 {final_choice}
+
+This means V4.2 satisfies the configured replacement criteria against V4. It does not mean V4.2 dominates V4.1 on every metric: on this visual validation subset, `q_v41+action` has slightly lower all-test residual MSE than `q_v42+action`, so V4.1 remains a strong sparse/performance reference.
 
 ## Recommendation
 

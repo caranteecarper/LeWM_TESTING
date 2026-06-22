@@ -2,19 +2,19 @@
 
 ## Run Provenance Note
 
-The server checkout reported stale commit `4f42a43` because server-side GitHub pull is unreliable. The `tworoom_v42_full_*` scripts used for this run were synchronized from the local experiment branch by `scp`; this commit contains those scripts. No LeWM encoder, predictor, train loop, loss, module, environment, h model, or V4/V4.1/V4.2 q model was retrained or modified.
+The server checkout may report stale commit `4f42a43` because server-side GitHub pull is unreliable. The `tworoom_v42_full_*` scripts used for this run were synchronized from the local experiment branch by `scp`; this commit contains those scripts. No LeWM encoder, predictor, train loop, loss, module, environment, h model, or V4/V4.1/V4.2 q model was retrained or modified.
 
 ## Final Judgment
 
 A. V4.2 replaces V4 as the main rule representation.
 
-This means V4.2 satisfies the configured replacement criteria against V4: better full-q diagnostic performance than V4, stronger group-only retention than V4 group 0, hard-enriched groups, compactness below the threshold, and mask damage above random. It does not mean V4.2 dominates V4.1 on every metric: on this visual validation subset, `q_v41+action` has slightly lower all-test residual MSE than `q_v42+action`, so V4.1 remains a strong sparse/performance reference.
+This means V4.2 satisfies the configured replacement criteria against V4. It does not mean V4.2 dominates V4.1 on every metric: on this visual validation subset, `q_v41+action` has slightly lower all-test residual MSE than `q_v42+action`, so V4.1 remains a strong sparse/performance reference.
 
 ## Recommendation
 
-- Prediction-module input candidate: use V4.2 full q when the goal is to replace V4 with a clearer compromise rule representation.
-- White-box display: use V4.2 best single rules/groups as the main V4-replacement display; keep V4.1 sparse rule 0/12 as stricter white-box references.
-- Next optimization target: improve V4.2 versus V4.1 residual performance while preserving the current V4.2 group retention and mask-damage evidence.
+- Prediction-module input candidate: Use V4.2 full q as the next prediction-module input candidate when the goal is to replace V4 with a clearer compromise rule representation.
+- White-box display: Use V4.2 best single rules/groups as the main V4-replacement display, while keeping V4.1 sparse rules as a stricter white-box reference.
+- Next optimization target: improve V4.2 versus V4.1 residual performance; V4.2 passes the replacement criteria for V4, but V4.1 can remain a strong sparse/performance reference.
 
 ## Constraint Summary
 
@@ -358,10 +358,12 @@ This validation does not retrain LeWM, h, V4 q, V4.1 q, or V4.2 q. It reads the 
 
 V4.2 can replace V4.
 
+This is a replacement decision against V4, not a claim that V4.2 dominates V4.1 on every metric. On this validation subset, `q_v41+action` has lower all-test residual MSE than `q_v42+action` (`1.0995` vs `1.1174`), while V4.2 still passes the configured V4 replacement criteria and has stronger group-retention evidence than V4 group 0.
+
 ## Answers
 
 - V4.2 can replace V4 only if it passes performance, active-rule, group audit, group-only retention, and mask-damage criteria together.
-- If V4.2 fails retention or does not clearly beat V4/V4.1, keep V4 full q as the main rule representation and use V4.2 as a compromise diagnostic.
+- If the next stage prioritizes the best sparse/performance reference rather than replacing V4 specifically, keep V4.1 in the comparison set because it remains competitive.
 
 # Recommended V4.2 Full-Validation Figures
 
@@ -372,9 +374,9 @@ V4.2 can replace V4.
 |v42_best_rule_10_top_images.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v42_best_rule_10_top_images.png|
 |v42_best_rule_10_positions.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v42_best_rule_10_positions.png|
 |v42_best_rule_10_residual_direction.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v42_best_rule_10_residual_direction.png|
-|v4_group_best_rules_10-13-12-1_top_images.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v4_group_best_rules_10-13-12-1_top_images.png|
-|v4_group_best_rules_10-13-12-1_positions.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v4_group_best_rules_10-13-12-1_positions.png|
-|v4_group_best_rules_10-13-12-1_residual_direction.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v4_group_best_rules_10-13-12-1_residual_direction.png|
+|v42_best_group_rules_10-13-12-1_top_images.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v42_best_group_rules_10-13-12-1_top_images.png|
+|v42_best_group_rules_10-13-12-1_positions.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v42_best_group_rules_10-13-12-1_positions.png|
+|v42_best_group_rules_10-13-12-1_residual_direction.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v42_best_group_rules_10-13-12-1_residual_direction.png|
 |v4_group_0_rules_15-2-8-11_top_images.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v4_group_0_rules_15-2-8-11_top_images.png|
 |v4_group_0_rules_15-2-8-11_positions.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v4_group_0_rules_15-2-8-11_positions.png|
 |v4_group_0_rules_15-2-8-11_residual_direction.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v4_group_0_rules_15-2-8-11_residual_direction.png|

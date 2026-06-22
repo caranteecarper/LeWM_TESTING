@@ -1,5 +1,34 @@
 from tworoom_v42_full_common import *
-from tworoom_v51_common import save_group_visuals, save_unit_visuals
+from tworoom_v51_common import (
+    compactness,
+    hard_enrichment,
+    save_group_visuals,
+    save_residual_arrows,
+    save_top_images,
+    save_unit_visuals,
+    scatter_pos,
+)
+
+
+def save_named_group_visuals(fig_dir, vis, q_name, prefix, rules):
+    te = vis["test_idx"]
+    q = vis[q_name][te].float()
+    score = q[:, rules].mean(1)
+    top_local = torch.topk(score, k=min(200, score.numel())).indices
+    top_samples = te[top_local]
+    save_top_images(fig_dir / f"{prefix}_top_images.png", vis, top_samples[:8], prefix)
+    scatter_pos(fig_dir / f"{prefix}_positions.png", vis["position_t"][te], color=score, title=f"{prefix} activation over position")
+    save_residual_arrows(fig_dir / f"{prefix}_residual_direction.png", vis["position_t"][top_samples], vis["residual_t"][top_samples], f"{prefix} residual directions")
+    enrich = hard_enrichment(vis, score)
+    top_hard, top_enrich = max(enrich.items(), key=lambda kv: kv[1])
+    return {
+        "group_id": prefix,
+        "rules": ",".join(map(str, rules)),
+        "top_hard_subset": top_hard,
+        "hard_enrichment": top_enrich,
+        "mean_residual_mag": vis["residual_t"][top_samples].norm(dim=1).mean().item(),
+        "spatial_compactness": compactness(vis["position_t"][te], score),
+    }
 
 
 def main():
@@ -26,11 +55,12 @@ def main():
         f"v42_best_rule_{best_rule}_positions.png",
         f"v42_best_rule_{best_rule}_residual_direction.png",
     ]
-    save_group_visuals(fig_dir, {**vis, "q_v4_t": vis["q_v42_t"]}, "best", best_rules)
+    v42_group_prefix = f"v42_best_group_rules_{'-'.join(map(str, best_rules))}"
+    save_named_group_visuals(fig_dir, vis, "q_v42_t", v42_group_prefix, best_rules)
     generated += [
-        f"v4_group_best_rules_{'-'.join(map(str, best_rules))}_top_images.png",
-        f"v4_group_best_rules_{'-'.join(map(str, best_rules))}_positions.png",
-        f"v4_group_best_rules_{'-'.join(map(str, best_rules))}_residual_direction.png",
+        f"{v42_group_prefix}_top_images.png",
+        f"{v42_group_prefix}_positions.png",
+        f"{v42_group_prefix}_residual_direction.png",
     ]
     save_group_visuals(fig_dir, vis, 0, V4_GROUPS["group_0"])
     generated += [

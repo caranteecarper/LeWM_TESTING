@@ -7,9 +7,9 @@
 |v42_best_rule_10_top_images.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v42_best_rule_10_top_images.png|
 |v42_best_rule_10_positions.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v42_best_rule_10_positions.png|
 |v42_best_rule_10_residual_direction.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v42_best_rule_10_residual_direction.png|
-|v4_group_best_rules_10-13-12-1_top_images.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v4_group_best_rules_10-13-12-1_top_images.png|
-|v4_group_best_rules_10-13-12-1_positions.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v4_group_best_rules_10-13-12-1_positions.png|
-|v4_group_best_rules_10-13-12-1_residual_direction.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v4_group_best_rules_10-13-12-1_residual_direction.png|
+|v42_best_group_rules_10-13-12-1_top_images.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v42_best_group_rules_10-13-12-1_top_images.png|
+|v42_best_group_rules_10-13-12-1_positions.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v42_best_group_rules_10-13-12-1_positions.png|
+|v42_best_group_rules_10-13-12-1_residual_direction.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v42_best_group_rules_10-13-12-1_residual_direction.png|
 |v4_group_0_rules_15-2-8-11_top_images.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v4_group_0_rules_15-2-8-11_top_images.png|
 |v4_group_0_rules_15-2-8-11_positions.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v4_group_0_rules_15-2-8-11_positions.png|
 |v4_group_0_rules_15-2-8-11_residual_direction.png|/data/lzt26/lewm_official_tworoom_readout_git/outputs/tworoom_v42_full_validation/figures/recommended/v4_group_0_rules_15-2-8-11_residual_direction.png|
