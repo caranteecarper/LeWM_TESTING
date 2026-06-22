@@ -15,6 +15,11 @@ outputs/tworoom_visualization_v5/
 outputs/tworoom_visualization_v51/
 outputs/tworoom_rule_group_v52/
 outputs/tworoom_kanfis_v42_compromise/
+outputs/tworoom_v42_full_validation/
+outputs/tworoom_v42_full_validation/**/*.pt
+outputs/tworoom_v42_full_validation/**/*.npy
+outputs/tworoom_v42_full_validation/**/figures*/
+reports/tworoom_v42_full_validation/*.log
 scripts/analysis/__pycache__/
 checkpoints/
 data/
