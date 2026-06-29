@@ -25,6 +25,11 @@ outputs/tworoom_failure_atlas/**/*.pt
 outputs/tworoom_failure_atlas/**/*.npy
 outputs/tworoom_failure_atlas/**/figures*/
 reports/tworoom_failure_atlas/*.log
+outputs/tworoom_direct_predictor_failure_atlas/
+outputs/tworoom_direct_predictor_failure_atlas/**/*.pt
+outputs/tworoom_direct_predictor_failure_atlas/**/*.npy
+outputs/tworoom_direct_predictor_failure_atlas/**/figures*/
+reports/tworoom_direct_predictor_failure_atlas/*.log
 scripts/analysis/__pycache__/
 checkpoints/
 data/
