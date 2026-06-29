@@ -637,13 +637,13 @@ def main():
 
     te = split_mask(base, errors, "test")
     meta = errors["metadata"]
-    text = f"""# TwoRoom Direct Predictor Failure Atlas
+    text = f"""# TwoRoom 官方 Predictor 真实失败样本分析
 
-## Purpose
+## 目的
 
-This atlas uses the official trained TwoRoom LeWM baseline predictor directly. It is not a residual proxy atlas.
+这个分析直接使用已经训练好的官方 TwoRoom LeWM baseline predictor，不是之前的 residual proxy 分析。
 
-The computation path is:
+计算路径是：
 
 ```text
 official validation batch pixels/action from train.py data path
@@ -653,9 +653,9 @@ last predictor token -> pred_z[t+1]
 compare with official encoded target emb[:, -1]
 ```
 
-The `official_window_mse` column also mirrors `train.py` more closely by averaging the predictor outputs against shifted targets `[t-1, t, t+1]`.
+其中 `official_window_mse` 更接近 `train.py` 里的官方训练 loss 定义：把 predictor 的多个输出和 shifted targets `[t-1, t, t+1]` 做平均误差。
 
-## Metadata
+## 元信息
 
 - checkpoint: `{meta.get('checkpoint')}`
 - eval source: `{meta.get('split')}`
@@ -669,31 +669,56 @@ The `official_window_mse` column also mirrors `train.py` more closely by averagi
 - missing keys: `{meta.get('missing_keys')}`
 - unexpected keys: `{meta.get('unexpected_keys')}`
 
-## Direct Predictor Failure Summary
+## 官方 Predictor 失败样本统计
 
 {table_md(summary, ["failure_mode", "count", "rate", "last_step_mse_mean", "last_step_mse_global_mean", "last_step_cosine_mean", "official_window_mse_mean", "official_window_mse_global_mean"])}
 
-## Rule Alignment With Direct Predictor Failures
+## 规则与官方 Predictor 失败样本的对应关系
 
-Top enrichments:
+下面的 `enrichment` 不是“加入规则后错误变高”，而是一个统计富集比例：
+
+```text
+enrichment = active_rate / base_rate
+```
+
+含义是：
+
+- `base_rate`：全部分析样本里，属于某类高错误样本的比例。
+- `active_rate`：只看某个 rule / rule group 高激活的样本，其中属于同类高错误样本的比例。
+- `enrichment > 1`：rule 高激活时，更容易遇到官方 predictor 高错误样本。
+- `enrichment = 1`：rule 激活和错误样本没有明显关系。
+- `enrichment < 1`：rule 高激活时，反而较少落在这类错误样本里。
+
+例子：`v42_group_10_13_12_1` 在 `direct_mse_top5` 上：
+
+```text
+base_rate   = 0.0500  约等于全部样本里 top5 高错误样本占 5%
+active_rate = 0.1438  约等于该 rule group 高激活样本里有 14.4% 是 top5 高错误
+enrichment  = 0.1438 / 0.0500 ≈ 2.87
+```
+
+所以它证明的是：V4.2 这个 rule group 像一个“错误雷达”，更常在官方 LeWM predictor 真正预测失败的位置亮起来。它不表示 rule 导致错误，也不表示把 rule 接入模型后错误变高。
+
+最高富集项：
 
 {table_md(overlap_top, ["rule_or_group", "failure_mode", "base_rate", "active_rate", "inactive_rate", "enrichment", "active_count"])}
 
-## Figure Index
+## 图片索引
 
 {table_md(figure_rows, ["figure", "type", "source", "path"])}
 
-## Current Read
+## 当前结论
 
-- `direct_mse_top10/top20` is the strongest one-step failure label because it comes from the official predictor output and official next latent target.
-- If a V4/V4.2 rule group has high enrichment on `direct_mse_top10`, it means the rule is aligned with true official LeWM next-latent prediction failures, not only with previous physical residual proxies.
-- The episode figures show concrete examples: current images, trajectory location, direct predictor error over time, and rescaled V4.2 group activation.
+- `direct_mse_top10/top20` 是目前最硬的一步预测失败标签，因为它直接来自官方 predictor 输出和官方 encoder latent target 的误差。
+- 如果 V4/V4.2 rule group 在 `direct_mse_top10` 上有高富集，说明它和官方 LeWM 的真实 next-latent 预测失败有关，而不只是和之前的物理 residual proxy 有关。
+- 这次结果里，V4.2 group `[10,13,12,1]` 对 `direct_mse_top5` 的富集约为 `2.87`，对 `direct_cosine_error_top5` 的富集约为 `2.94`，说明它确实集中覆盖官方 predictor 最难预测的样本。
+- episode 图片展示的是具体错题：图像状态、轨迹位置、direct predictor error 随时间变化，以及缩放后的 V4.2 group activation。
 
-## Caveats
+## 注意事项
 
-- This is one-step direct predictor failure analysis, aligned with the official training objective. It is not yet multi-step rollout failure.
-- It directly re-encodes official validation pixels with the official checkpoint and official validation DataLoader transform, then runs the official predictor/action encoder.
-- High enrichment is evidence of strong association, not causal proof. Causal proof still requires rule masking/intervention.
+- 这是一步 direct predictor failure analysis，和官方训练目标一致；它还不是多步 rollout failure。
+- 本分析直接用官方 checkpoint 和官方 validation DataLoader transform 重新编码 validation pixels，再运行官方 predictor / action encoder。
+- 高富集是强相关证据，不是因果证明。要证明规则真的能改变错误，还需要做 rule masking / intervention。
 """
     write_report("README.md", text)
 
