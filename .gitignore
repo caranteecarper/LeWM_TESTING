@@ -20,6 +20,11 @@ outputs/tworoom_v42_full_validation/**/*.pt
 outputs/tworoom_v42_full_validation/**/*.npy
 outputs/tworoom_v42_full_validation/**/figures*/
 reports/tworoom_v42_full_validation/*.log
+outputs/tworoom_failure_atlas/
+outputs/tworoom_failure_atlas/**/*.pt
+outputs/tworoom_failure_atlas/**/*.npy
+outputs/tworoom_failure_atlas/**/figures*/
+reports/tworoom_failure_atlas/*.log
 scripts/analysis/__pycache__/
 checkpoints/
 data/
