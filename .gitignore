@@ -30,6 +30,11 @@ outputs/tworoom_direct_predictor_failure_atlas/**/*.pt
 outputs/tworoom_direct_predictor_failure_atlas/**/*.npy
 outputs/tworoom_direct_predictor_failure_atlas/**/figures*/
 reports/tworoom_direct_predictor_failure_atlas/*.log
+outputs/tworoom_failure_confidence_head_v1/
+outputs/tworoom_failure_confidence_head_v1/**/*.pt
+outputs/tworoom_failure_confidence_head_v1/**/*.npy
+outputs/tworoom_failure_confidence_head_v1/**/figures*/
+reports/tworoom_failure_confidence_head_v1/*.log
 scripts/analysis/__pycache__/
 checkpoints/
 data/
